@@ -1,15 +1,21 @@
 #include <stdio.h>
 #include <dlfcn.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 int main(int argc, char **argv)
 {
     void *handle;
     int (*func)(int);
     char *error;
-    char *libname;
+    char libname[100];
 
-    sprintf(libname, "./%s", argv[1]);
+    if (argv[1][0] != '/') {
+        sprintf(libname, "./%s", argv[1]);
+    }
+    else {
+        sprintf(libname, "%s", argv[1]);
+    }
     handle = dlopen(libname, RTLD_LAZY);
     if (!handle) {
         fputs (dlerror(), stderr);
@@ -22,7 +28,7 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    int i = (int)argv[3];
+    int i = (intptr_t)argv[3];
     int answer = (*func)(i);
     printf("%d\n", answer);
     dlclose(handle);
