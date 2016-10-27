@@ -28,7 +28,8 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    int i = (intptr_t)argv[3];
+    /* int i = (intptr_t)argv[3]; */
+    int i = atoi(argv[3]);
     printf("%d\n", (*func)(i));
     dlclose(handle);
 }
