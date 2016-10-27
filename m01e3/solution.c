@@ -8,7 +8,7 @@ int main(int argc, char **argv)
     void *handle;
     int (*func)(int);
     char *error;
-    char libname[100];
+    char libname[200];
 
     if (argv[1][0] != '/') {
         sprintf(libname, "./%s", argv[1]);
@@ -29,7 +29,6 @@ int main(int argc, char **argv)
     }
 
     int i = (intptr_t)argv[3];
-    int answer = (*func)(i);
-    printf("%d\n", answer);
+    printf("%d\n", (*func)(i));
     dlclose(handle);
 }
