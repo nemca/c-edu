@@ -1,7 +1,7 @@
 all: bin
 
 bin: solution.c
-	gcc -fPIC -ldl -o solution solution.c
+	gcc -o solution solution.c -ldl
 
 clean:
 	-rm solution

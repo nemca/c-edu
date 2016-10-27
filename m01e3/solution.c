@@ -1,26 +1,29 @@
-#include <stddef.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <dlfcn.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
-    if (argc != 4)
-        printf("Too few arguments\n");
+    void *handle;
+    int (*func)(int);
+    char *error;
+    char *libname;
+
+    sprintf(libname, "./%s", argv[1]);
+    handle = dlopen(libname, RTLD_LAZY);
+    if (!handle) {
+        fputs (dlerror(), stderr);
         exit(1);
+    }
 
-    void *hdl = dlopen(argv[1], RTLD_LAZY);
-    if (NULL == hdl)
-        printf("Error dlopen\n");
+    func = dlsym(handle, argv[2]);
+    if ((error = dlerror()) != NULL) {
+        fputs(error, stderr);
         exit(1);
+    }
 
-    /* (void (*)(const char *)) */
-    void *func = (void (*))dlsym(hdl, argv[2]);
-    if (NULL == func)
-        printf("Error dlsym\n");
-        exit(2);
-
-    int answer = func((int)argv[3]);
+    int i = (int)argv[3];
+    int answer = (*func)(i);
     printf("%d\n", answer);
+    dlclose(handle);
 }
